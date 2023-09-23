@@ -1,0 +1,41 @@
+---
+title: "How Can Universities Enroll More Student Veterans?"
+author: "Wesley Wilson"
+format:
+  docx:
+    reference-doc: custom-reference-doc.docx
+editor: visual
+bibliography: citation_styles/references.bib
+csl: citation_styles/american-political-science-association.csl
+---
+
+## Introduction
+
+Annually, approximately 200,000 service members transition from the U.S. military to civilian life. This military-to-civilian transition holds particular significance for policy makers tasked with ensuring the seamless reintegration of service members into civilian society. The primary policy instrument employed by the Federal Government to assist service members in this process is the provision of educational benefits through programs like the G.I. Bill. Simultaneously, many colleges and universities nationwide have developed comprehensive initiatives aimed at both enhancing student diversity and accessing federal funding facilitated by the G.I. Bill. These initiatives encompass various measures, such as increasing financial aid for student veterans, establishing dedicated student veteran support center, or implementing liberal transfer credit policies recognizing military training as academic credit; however, little is known as to whether these initiatives lead to increases in student veteran enrollment. Drawing upon data sourced from the U.S. Department of Veterans' Affairs' G.I. Bill comparison tool, this paper seeks to examine the causal relationship between student support and the enrollment of student veterans.
+
+## Research Question
+
+### Do universities that offer more services or financial support to student veterans enroll more student veterans?
+
+## Literature Review
+
+The history of student veterans in higher education begins with the passing of the 1944 Servicemen's Readjustment Act of 1994---known today as the G.I. Bill. Indicative of its name, the orignal G.I. Bill was designed principally to assist the soon-to-be millions of World War II veterans returning home the opportunity to re-aclimate to civilian life by providing funding to pursue higher education, unemployment insurance, and housing loans [@nationalarchives2021]. The policy impacts of the G.I. Bill have been extensively researched and documented. The G.I. Bill caused a surge in student veteran enrollment and heavily increased collegiate access across America's colleges [@bound2002]. In total, roughly half of America's WWII veterans--- nearly 8 million service members --- would use the G.I. Bill for re-training or continued education [@cate2017, pp 8]. With a total cost of roughly \$14.5 billion, the G.I. Bill provided no shortage of financial benefits to colleges and, as an administrator at the Veterans Administration put it, the bill "helped raise the education level of an entire generation" [@nyt1956].
+
+Student veterans' relationship with institutions of higher learning has not always been positive. While the original G.I. passed unanimously in the House and Senate, many University presidents were staunchly opposed to the Bill. President Conant of Harvard University warned that colleges would also admit students with lower academic capabilities in their efforts to attract WWII veterans, thereby undermining academic rigor [@olson1973, pp 604]. Some presidents were concerned about accommodating married students with families on campus [@olson1973, pp 603]; others took a bold stance. For example, the President of the University of Chicago, Robert Maynard, was famously quoted, "Colleges and Universities will find themselves covered into educational hobo jungles" [@hindley2014]. The inflammtory rhetoric towards veterans on campus would eventually disipate and become more welcoming. In 1948, shortly after his initial criticism, President Conant of Harvard praises Harvard's WWII veterans as being, "the best in Harvard's history" [@svac2022, pp 26].
+
+The original G.I. Bill was sunsetted in 1956. Since its discontinuance, Congress has enacted numerous versions of the education benefit ---from the Korean War G.I. Bill, to the Montgomery G.I. Bill, to the present-day Post-9/11 G.I. Bill[^1]. In terms of benefits, the Post-9/11 G.I. Bill differs substantially from previous generations by providing up to 36 months in education benefits, paying an annual tuition maximum of \$27,120 to the school, and providing the student with housing and book stipends @veteransbenefitsadministration2023. Colleges whose tuition rates exceed the annual \$27,000 tuition maximum---such as private universities---can elect to participate in the Yellow Ribbon Program (YRP). The YRP is a voluntary agreement between the VA and a University to help pay the tuition that exceeds the Post-9/11 G.I. Bill annual maximum. Under the YRP, colleges decide the maximum amount in tuition they will contribute per student, and the VA matches their contribution dollar-for-dollar [@vbaeducationservice2020].
+
+[^1]: In 2017, Congress passed the Harry W. Colmery Veterans Education Assistance Act, or Forever G.I. Bill [@rep.roe2017]. The bill revised the Post-9/11 G.I. Bill by removing time restrictions for program use and expanding benefits; however, the terms Forever G.I. Bill and Post-9/11 G.I. Bill are used interchangeably.
+
+The Veterans Benefits Administration spends roughly \$10.7 billion under the Post-9/11 G.I. Bill to provide education benefits to nearly 700,000 beneficiaries [@cbo2019]. Today, VA education benefits account for nearly 20% of the federal government's higher education spending [@pew2019]. As VA education spending has steadily increased, colleges have become increasingly interested in enrolling more student veterans to not only access federal dollars, but also diversify their student body. The Post-9/11 cohort of student veterans is the most diverse in US history. Student veterans today are more likely to be students of color [@holian2020], first-generation college students [@schmeling2019a], and be Pell Grant recipients [@nasfaa2022] (a metric often used to measure socio-economic status).
+
+The shared interests of Universities, policymakers, advocacy groups, and think-tanks have led to a growing body of literature dedicated to understanding the enrollment patterns and barriers of student veterans. In 2015, the Institute for Veterans and Military Families (IVMF) published research findings where the top barriers cited by student veterans in accessing higher education were lack of financial aid, expired G.I. Bill benefits, family obligations, and wellness issues [@c.2015]. In analyzing student veterans' enrollment decisions, location, college reputation, support, and affordability appear to be critical factors [@hill2016]. Other researchers have focused more heavily on understanding classroom experiences and campus services' impact on enrollment. A 2019 study found that student veterans who had positive relationships with their faculty members were less likely to drop out than those who did not [@fernandez2019]; while a 2014 study highlighted the importance of social integration and relationships [@olsen2014].
+
+With a better understanding of student veterans' needs, universities have developed robust support strategies, including increased financial aid like Yellow Ribbon scholarships and campus-service initiatives. For instance, the American Council on Education's student veteran toolkit promotes veteran-friendly institutions by providing designated student lounges, central points of contact, veteran-specific orientations, and student veteran clubs [@ace2018 pp5]. In 2012, President Obama introduced the Principles of Excellence Program (POE) via Executive Order 13607, encouraging universities to adhere to guidelines for transparent information, ethical marketing, and aiding veterans in their transition to civilian life [@nationalarchives2012]. Unfortunately, the causal impact of these initiatives on student veteran enrollment is largely unknown.
+
+{{< pagebreak >}}
+
+## References
+
+::: {#refs}
+:::
