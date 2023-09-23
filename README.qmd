@@ -1,6 +1,6 @@
 ---
 title: "readme"
-format: html
+format: gfm
 editor: visual
 ---
 
