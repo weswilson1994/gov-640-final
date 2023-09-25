@@ -1,10 +1,10 @@
-
 library(readxl)
 library(openxlsx)
 library(httr)
 library(tidyverse)
 library(keyring)
 library(tidycensus)
+options(scipen = 999)
 
 
 # Access the data from the G.I. Bill Comparison tool. 
@@ -13,7 +13,7 @@ data_url <- "https://www.benefits.va.gov/GIBILL/docs/job_aids/ComparisonToolData
 GET(data_url, write_disk(path = tf <- tempfile(fileext = ".xlsx")))
 
 data <- read_excel(path = tf, sheet = "Comparison_Tool_Data_Full", guess_max = 1000000) %>% 
-  filter(type == c("PRIVATE", "PUBLIC", "FOR PROFIT") & approved == TRUE)
+  filter(type %in% c("PRIVATE", "PUBLIC", "FOR PROFIT") & approved == TRUE)
 
 dictionary <- read.xlsx(data_url, sheet = "Data Dictionary")
 
@@ -51,27 +51,28 @@ gi_bill <- data %>%
     TRUE ~ zip
   )) %>% 
   # Now replace NA values for select columns. 
-  mutate(across(c(eight_keys_member, dodmou), ~ replace_na(., FALSE)))
+  mutate(across(c(eight_keys_member, dodmou), ~ replace_na(., FALSE))) %>% 
+  # Now replace NA values for gi bill beneficiaries with zero. 
+  mutate(across(c(n_gibill, p911_yr_recipients, p911_recipients, p911_tuition_fees, p911_yellow_ribbon), ~ replace_na(., 0)))
 
 # Prep the census data for join. 
 census_vets <- vets_by_zip %>% 
   mutate(zip = as.character(GEOID)) %>% 
   select(zip, n_vets_census = estimate, moe)
 
-
 # Try to join the G.I. Bill data with census data. There are about about ten observations that aren't
 missing_matches <- left_join(x = gi_bill, y = census_vets) %>% 
   filter(is.na(n_vets_census) & !duplicated(zip)) %>% 
-  select(institution, state, city, zip, n_vets_census)
+  select(institution, state, city, zip, n_vets_census) 
 
 missing <- which(gi_bill$zip %in% missing_matches$zip)
 
-new_zip_codes <- c("10011", "37210", "03784", "33410", "06511", "28202", "90606", "05401", "19611", "33125")
+new_zip_codes <- c("10011", "71103", "28617", "17602", "37204", "73135", "79698", "03755", "29426", "79699", "18711" , "53233" , "31404", 
+                   "02881", "77074" , "33410" , "17603", "75604", "91505", "06524" , "80205", "27109", "90606" , "05403" , "11575" , "01611", 
+                   "47725", "19610" , "33125" , "16546" , "18766" , "17606", "75270")
 
 replacing_missing <- tibble(old_zip = missing_matches$zip, new_zip = new_zip_codes) %>% 
   left_join(y = census_vets, by = c("new_zip" = "zip"))
-
-replacing_missing <- left_join(x = replacing_missing, y = census_vets, by = c("new_zip" = "zip"))
 
 # Now join all the data together.  
 gi_bill <- left_join(x = gi_bill, y = census_vets) %>% 
@@ -79,6 +80,12 @@ gi_bill <- left_join(x = gi_bill, y = census_vets) %>%
   mutate(n_vets_census = coalesce(n_vets_census.x, n_vets_census.y)) %>% 
   mutate(moe = coalesce(moe.x, moe.y)) %>% 
   select(-moe.x, - moe.y, - n_vets_census.x, - n_vets_census.y, - new_zip)
+
+# add/modify a few variables 
+gi_bill <- gi_bill %>% 
+  mutate(avg_yellow_ribbon_payment = round(p911_yellow_ribbon / p911_recipients)) %>% 
+  mutate(n_vets_census = ifelse(n_vets_census < n_gibill, n_vets_census + moe, n_vets_census)) %>% 
+  select(-moe)
 
 #export the original data
 saveRDS(object = data, file = "./data/original/gi_bill_comparison_tool.rds")
