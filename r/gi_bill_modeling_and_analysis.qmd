@@ -184,7 +184,9 @@ tibble(actual = selected_model$residuals, fitted = selected_model$fitted.values)
 ### Check for Multicollinearity 
 
 ```{r}
-corr_matrix <- cor(model_data)
+corr_matrix <- model_data %>% 
+  dplyr::select(-institution) %>% 
+  cor()
 
 corrplot(corr_matrix)
 ```
