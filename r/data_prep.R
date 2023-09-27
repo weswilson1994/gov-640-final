@@ -28,9 +28,10 @@ names(data) <- names(data) %>%
 variables <- load_variables(2021, "acs5", cache = FALSE)
   
 # Get the number of veterans by zip code from the 2017-2021 ACS survey, which surveys geographies with a population of 20,000 or more. 
+census_api_key(key = key_get("census_api_key_wes"))
 vets_by_zip <- get_acs(geography = "zcta", variables = "B21001_002", year = 2021, survey = "acs5") 
 
-# Prep the G.I. Bill data a bit
+# Prep the G.I. Bill data 
 gi_bill <- data %>%
   # Select only the variables that are useful.
   select(facility_code, ope, ope6, institution, city, state, zip, type, bah,
