@@ -183,7 +183,7 @@ regression_sum_tbl <- selected_model %>%
   add_glance_source_note(include = c(r.squared, adj.r.squared, p.value)) %>% 
   as_gt()
 
-gtsave(data = regression_sum_tbl, filename = "./tables_graphs/regression_summary.png") 
+# gtsave(data = regression_sum_tbl, filename = "./tables_graphs/regression_summary.png") 
 
 
 

@@ -1,0 +1,156 @@
+---
+title: "gi_bill_modeling_and_analysis"
+format: html
+editor: visual
+---
+
+## Setup
+
+```{r}
+#----------------------------------------------------------- Packages
+library(tidyverse)
+library(leaps)
+library(MASS)
+options(scipen = 999)
+```
+
+## Loading in Data
+
+```{r}
+gi_bill <- read_rds(file = "./data/final/final_gi_bill_data_for_analysis.rds")
+
+model_data <- gi_bill %>% 
+  dplyr::select(bah:avg_yellow_ribbon_payment) %>% 
+  dplyr::select(! c(p911_recipients, p911_yr_recipients, p911_tuition_fees, p911_yellow_ribbon)) %>% 
+  na.omit()
+
+```
+
+```{r}
+# Static values
+split_percentage <- .70
+full_model_formula <- n_gibill ~ . + yr_member:avg_yellow_ribbon_payment + yr_member:annual_tuition
+
+enrollment_mean <- mean(model_data$undergrad_enrollment)
+enrollment_sd <- sd(model_data$undergrad_enrollment)
+```
+
+## Standardizing Data
+
+```{r}
+model_data <- model_data %>% 
+  mutate(undergrad_enrollment = scale(undergrad_enrollment, scale = T)) %>% 
+  mutate(annual_tuition = scale(annual_tuition, scale = TRUE)) 
+```
+
+## Splitting Test and Training Data
+
+```{r}
+set.seed(123)
+train_index <- sample(nrow(model_data), split_percentage * nrow(model_data))
+training_data <- model_data[train_index, ]
+test_data <- model_data[-train_index, ]
+```
+
+### Model Selection -- Stepwise Subsets
+
+```{r}
+reg_subsets_train <- regsubsets(full_model_formula, data = training_data, nvmax = 18, method = "backward")
+
+plot(reg_subsets_train, scale = "bic")
+
+full_model <- lm(full_model_formula, data = model_data)
+summary(full_model)
+
+# I will need some transformation or standardization. 
+plot(full_model)
+```
+
+```{r}
+# Create a model matrix to build an "X" matrix from the test data. 
+full_model_matrix <- model.matrix(full_model_formula, data = test_data)
+```
+
+I am going to compare RMSE for training and test data for a bunch of different models to try and select the best model. So, I will
+
+1.  Run a for-loop for each variable;
+
+2.  Extract the coefficients from the regsubsets used on my training data earlier;
+
+3.  Multiply them into the appropriate columns;
+
+4.  Compute the test MSE.
+
+```{r}
+n_variables <- reg_subsets_train$last - 1 # remove the intercept as a variable. 
+rmse_for_models <- rep(NA, n_variables)
+
+for (i in 1:n_variables) {
+  coefi <- coef(reg_subsets_train, id = i)
+  pred <- full_model_matrix[, names(coefi)] %*% coefi
+  rmse_for_models[i] <- sqrt(mean((test_data$n_gibill - pred)^ 2))
+}
+```
+
+Which model did the best?
+
+```{r}
+which.min(rmse_for_models) 
+coef(reg_subsets_train, which.min(rmse_for_models)) # this model has the lowest RMSE
+
+tibble(rmse_for_models = rmse_for_models, 
+       n_var = 1:n_variables, 
+       var_names = coef(reg_subsets_train, n_var)) %>% 
+       arrange(rmse_for_models)
+```
+
+It looks like the model with six variables did the best, that said the RMS is very small and the differences among them is tiny. For completeness, I am going to check the RMSE on the training data to see how they change.
+
+```{r, warning=FALSE}
+full_model_matrix_train <- model.matrix(full_model_formula, data = training_data)
+n_variables <- reg_subsets_train$last - 1 # remove the intercept as a variable. 
+rmse_for_models_train <- rep(NA, n_variables)
+
+
+for (i in 1:n_variables) {
+  coefi <- coef(reg_subsets_train, id = i)
+  pred <- full_model_matrix_train[, names(coefi)] %*% coefi
+  rmse_for_models_train[i] <- sqrt(mean((test_data$n_gibill - pred)^ 2))
+}
+
+
+
+rmse_for_models_train - rmse_for_models # the rmse decreases when going from the training to test data, which is ideal. 
+```
+
+I will use the model that minimized the RMSE, however, I am going to add a few controlling variables, as it will not mess with my model predictions too much.
+
+```{r}
+coef(reg_subsets_train, which.min(rmse_for_models)) 
+```
+
+I am still not really any closer, so I am going to do stepwise selection as well.
+
+```{r}
+stepAIC(full_model, direction = "backward")
+```
+
+```{r}
+selected_model <- lm(formula = n_gibill ~ undergrad_enrollment + yr_member + poe_member + dodmou + student_vet_grp_ipeds + annual_tuition + n_vets_census + yr_member:annual_tuition, data = model_data)
+
+summary(selected_model)
+```
+
+## Model Diagnostics
+
+```{r}
+plot(selected_model)
+```
+
+```{r}
+lm(formula = n_gibill ~ undergrad_enrollment + yr_member + poe_member + dodmou + student_vet_grp_ipeds + annual_tuition + n_vets_census + yr_member:annual_tuition, data = model_data) %>% 
+  plot()
+
+ggplot(data = selected_model$residuals, aes(x = selected_model$residuals)) +
+  geom_bar()
+```
